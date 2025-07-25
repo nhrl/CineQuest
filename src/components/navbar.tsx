@@ -14,6 +14,28 @@ import {
 } from "@/components/ui/navigation-menu"
 import { Link } from "react-router-dom";
 
+const genre = [
+  { name: 'Action' },
+  { name: 'Adventure' },
+  { name: 'Animation' },
+  { name: 'Comedy' },
+  { name: 'Crime' },
+  { name: 'Documentary' },
+  { name: 'Drama' },
+  { name: 'Family' },
+  { name: 'Fantasy' },
+  { name: 'History' },
+  { name: 'Horror' },
+  { name: 'Music' },
+  { name: 'Mystery' },
+  { name: 'Romance' },
+  { name: 'Science Fiction' },
+  { name: 'TV Movie' },
+  { name: 'Thriller' },
+  { name: 'War' },
+  { name: 'Western' }
+]
+
 function Navbar() {
     const [menuOpen, setMenuOpen] = useState(false);
     const toggleMenu = () => setMenuOpen(!menuOpen);
@@ -49,24 +71,16 @@ function Navbar() {
                                 Genre
                             </NavigationMenuTrigger>
                             <NavigationMenuContent>
-                                <ul className="grid w-[100px] gap-4">
-                                <li>
-                                    <NavigationMenuLink asChild>
-                                    <a href="#" className="flex-row items-center gap-2 hover:bg-h-pink">
-                                        Backlog
-                                    </a>
-                                    </NavigationMenuLink>
-                                    <NavigationMenuLink asChild>
-                                    <a href="#" className="flex-row items-center gap-2 hover:bg-h-pink">
-                                        To Do
-                                    </a>
-                                    </NavigationMenuLink>
-                                    <NavigationMenuLink asChild>
-                                    <a href="#" className="flex-row items-center gap-2 hover:bg-h-pink">
-                                        Done
-                                    </a>
-                                    </NavigationMenuLink>
-                                </li>
+                                <ul className="flex flex-wrap justify-center gap-2">
+                                    {genre.map((g, index) => (
+                                    <li key={index}>
+                                        <NavigationMenuLink asChild>
+                                        <a href="#" className="border-1 border-bg-gray p-1 hover:bg-h-pink hover:border-white">
+                                            {g.name}
+                                        </a>
+                                        </NavigationMenuLink>
+                                    </li>
+                                    ))}
                                 </ul>
                             </NavigationMenuContent>
                         </NavigationMenuItem>
@@ -86,15 +100,21 @@ function Navbar() {
 
     {/* Mobile View */}
       {menuOpen && (
-        <div className="absolute top-20 left-0 w-full bg-bg-purple text-white px-6 py-4 md:hidden">
+        <div className="z-20 absolute top-[73px] left-0 w-full bg-bg-purple text-white px-6 py-4 md:hidden">
           <ul className="space-y-4">
-            <li><a href="#">Home</a></li>
+            <li><a href="/Home">Home</a></li>
             <li><a href="#">Movies</a></li>
             <li><a href="#">TV Series</a></li>
-            <li><a href="#">Action</a></li>
-            <li><a href="#">Drama</a></li>
-            <li><a href="#">Comedy</a></li>
-            <li><a href="#">Sci-Fi</a></li>
+          </ul>
+          <h1 className='mt-4 text-bg-gray mb-2'>Genre</h1>
+          <ul className='flex flex-wrap gap-y-4 gap-x-2'>
+            {genre.map((g, index) => (
+              <li key={index}>
+                  <a href="#" className="rounded-md border-1 border-bg-gray p-1 hover:bg-h-pink hover:border-white">
+                      {g.name}
+                  </a>
+              </li>
+            ))}
           </ul>
         </div>
       )}

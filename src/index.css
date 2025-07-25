@@ -8,8 +8,15 @@
   src: url('./assets/font/Inter/static/Inter_18pt-SemiBold.ttf');
 }
 
+@font-face {
+  font-family: Inter-SM-Italic;
+  src: url('./assets/font/Inter/static/Inter_18pt-Italic.ttf');
+}
+
 @theme inline {
   --font-Inter-SM: Inter-SM, "sans-serif";
+  --font-Inter-SM-Italic: Inter-SM-Italic, "sans-serif";
+  --color-bg-gray:#9CA3AF;
   --color-bg-purple: #1E1B2E;
   --color-h-pink: #7C3AED;
   --color-text-primary: #F4F4F5;
@@ -52,7 +59,7 @@
 
 :root {
   --radius: 0.625rem;
-  --background: #1E1B2E;
+  --background: #0C0A1B;
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
