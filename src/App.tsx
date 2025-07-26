@@ -1,6 +1,7 @@
 import './App.css'
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from './components/navbar.tsx'
+import Footer from './components/footer.tsx'
 import Landing from './pages/landing.tsx'
 import Home from './pages/home.tsx'
 import Movie from './pages/movie.tsx'
@@ -12,7 +13,7 @@ function App() {
         <div>
           <Navbar />
         </div>
-        <main>
+        <main className='mt-18'>
           <Routes>
             <Route path='/' element={<Landing/>}></Route>
             <Route path='/Home' element={<Home/>}></Route>
@@ -20,7 +21,9 @@ function App() {
             <Route path='/Series' element={<Series/>}></Route>
           </Routes>
         </main>
-      
+         <div>
+          <Footer />
+        </div>
     </Router>
   )
 }
