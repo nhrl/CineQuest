@@ -24,7 +24,7 @@ function Landing() {
               >
               CineQuest
           </h1>
-          <h2 className='text-lg md:text-4xl text-text-primary font-Inter-SM font-semibold mb-6'>Because Movies Are Meant To Be Explored.</h2>
+          <h2 className='text-base md:text-4xl text-text-primary font-Inter-SM font-semibold mb-6'>Because Movies Are Meant To Be Explored.</h2>
           <div className='w-full flex justify-center items-center mb-6'>
               <input
                 type="text"

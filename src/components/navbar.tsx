@@ -104,9 +104,6 @@ function Navbar() {
                 </NavigationMenu>
             </div>
         </div>
-        
-
-        
 
         <div className="md:hidden flex items-center">
           <button onClick={toggleMenu} className="text-white cursor-pointer">
@@ -115,12 +112,13 @@ function Navbar() {
         </div>
 
     {/* Mobile View */}
+       {/* Mobile View */}
       {menuOpen && (
-        <div className="z-20 absolute top-[73px] left-0 w-full bg-bg-purple text-white px-6 py-4  md:hidden">
+        <div className="z-20 absolute top-[73px] left-0 w-full bg-bg-purple text-white px-6 py-4 md:hidden">
           <ul className="space-y-4">
-            <li><a href="/Home">Home</a></li>
-            <li><a href="#">Movies</a></li>
-            <li><a href="#">TV Series</a></li>
+            <li><a href='/Home'>Home</a></li>
+            <li><a href="/Movie">Movies</a></li>
+            <li><a href="/Series">TV Series</a></li>
           </ul>
           <h1 className='mt-4 text-bg-gray mb-2'>Genre</h1>
           <ul className='flex flex-wrap gap-y-4 gap-x-2'>
