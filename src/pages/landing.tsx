@@ -7,16 +7,16 @@ import { FireIcon } from "@heroicons/react/24/outline";
 
 function Landing() {
   return (
-    <div className="relative w-full h-screen">
+    <div className="relative w-full">
       {/* Background image */}
       <img
         src={MoiveBG}
         alt="Movie Background"
-        className="absolute inset-0 w-full h-3/4 object-cover opacity-25 -z-10"
+        className="absolute inset-0 w-full h-[600px] object-cover opacity-25 -z-10"
       />
 
       {/* Foreground content */}
-      <div className="flex flex-col items-center justify-center h-3/4 text-white pt-10">
+      <div className="flex flex-col items-center justify-center h-[600px] text-white pt-10">
         <div className='flex justify-center items-center flex-col'>
             <h1
               className="text-4xl md:text-6xl font-Inter-SM font-bold mb-2 text-text-primary"
@@ -76,14 +76,6 @@ function Landing() {
           <p className='text-bg-gray text-sm md:text-base font-Inter-SM-Italic font-semibold text-right'>— Martin Scorsese</p>
         </div>
       </div>
-      {/* Footer */}
-      <footer className='flex justify-center mt-20 pb-10'>
-        <div className='container flex place-content-evenly'>
-          <h1 className='text-bg-gray font-Inter-SM text-[12px]'>© 2025 CineQuest</h1>
-          <h1 className='text-bg-gray font-Inter-SM text-[12px]'>Powered by TMDb</h1>
-          <h1 className='text-bg-gray font-Inter-SM text-[12px]'>Built by Nhoriel B.</h1>
-        </div>
-      </footer>
     </div>
   )
 }

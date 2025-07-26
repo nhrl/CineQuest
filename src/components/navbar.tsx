@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 import cine from '../assets/cine.png'
 import {
@@ -40,9 +40,25 @@ function Navbar() {
     const [menuOpen, setMenuOpen] = useState(false);
     const toggleMenu = () => setMenuOpen(!menuOpen);
 
+    const [showNavbar, setShowNavbar] = useState(true);
+    const [lastScrollY, setLastScrollY] = useState(0);
+
+    useEffect(() => {
+      const handleScroll = () => {
+        const currentScrollY = window.scrollY;
+        setShowNavbar(currentScrollY < lastScrollY || currentScrollY <= 0);
+        setLastScrollY(currentScrollY);
+      };
+
+      window.addEventListener('scroll', handleScroll);
+      return () => window.removeEventListener('scroll', handleScroll);
+    }, [lastScrollY]);
+
   return (
-    <nav className="bg-bg-purple border-b-1 border-b-h-pink p-4 flex justify-center">
-        <div className="container flex">
+    <nav className={`bg-bg-purple flex  justify-center border-b md:pl-14 border-h-pink p-4 fixed w-full z-50 top-0 transition-transform duration-300 ${
+        showNavbar ? 'translate-y-0' : '-translate-y-full'
+      }`}>
+        <div className="container flex pr-10">
             <div className="flex-1">
                 <Link to="/"><img src={cine} alt="CineQuest" className="h-10 cursor-pointer"/></Link>
             </div>
@@ -100,7 +116,7 @@ function Navbar() {
 
     {/* Mobile View */}
       {menuOpen && (
-        <div className="z-20 absolute top-[73px] left-0 w-full bg-bg-purple text-white px-6 py-4 md:hidden">
+        <div className="z-20 absolute top-[73px] left-0 w-full bg-bg-purple text-white px-6 py-4  md:hidden">
           <ul className="space-y-4">
             <li><a href="/Home">Home</a></li>
             <li><a href="#">Movies</a></li>

@@ -1,47 +1,55 @@
 import MoiveBG from '../assets/movies.jpg'
 import { MagnifyingGlassIcon } from '@heroicons/react/24/solid'
-import { useState } from 'react'
-import f1 from '../assets/f1.jpg'
-import { Play } from 'lucide-react';
+import { useState, useEffect} from 'react'
+import MovieCard from '../components/movieCard';
+import type{ Media } from '../types/movie';
 
-function Home() {
+const Home: React.FC = () => {
     const [activeTab, setActiveTab] = useState<'movie' | 'tv'>('movie');
+    const [movies, setMovies] = useState<Media[]>([]);
+    const [tvSeries, setTvSeries] = useState<Media[]>([]);
+    const [topRated, setTopRated] = useState<Media[]>([]);
 
-    const renderMovies = () => {
-    return (
-        <>
-        <div className='relative group'>
-            <img
-                src={f1}
-                alt="F1 The Movie"
-                className="h-70 rounded-sm group-hover:opacity-75 transition-opacity duration-300"
-            />
-            <div className="absolute w-full h-[280px] top-0 flex items-center cursor-pointer justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <div className='p-2 rounded-full bg-h-pink'>
-                    <Play className="w-10 h-10 text-white drop-shadow-lg" />
-                </div>
-            </div>
-            <div className='flex font-Inter-SM text-sm text-bg-gray gap-2 mt-1'>
-                <h2 className='mr-4 pl-1'>HD</h2>
-                <h2>2025</h2>
-                <h2 className='text-end w-full pr-2'>140m</h2>
-            </div>
-            <div className='mt-1 pl-1'>
-                <h1 className='font-Inter-SM cursor-pointer hover:text-h-pink'>F1: The Movie</h1>
-            </div>
-        </div>
-        </>
-       
-        );
-    };
+    useEffect(() => {
+       fetchMovies();
+       fetchTvSeries();
+       fetchTopRated();
+    }, []);
 
-    const renderTVSeries = () => {
-        return (
-        <div>
-            {/* Replace with your actual TV series components */}
-            <p>TV Series content here</p>
-        </div>
-        );
+    const fetchTopRated = () => {
+        fetch('https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=1', {
+            headers: {
+            accept: 'application/json',
+            Authorization: `Bearer ${import.meta.env.VITE_TMDB_TOKEN}`,
+            },
+        })
+        .then(res => res.json())
+        .then(data => setTopRated(data.results))
+        .catch(err => console.error(err));
+    }
+
+    const fetchMovies = () => {
+        fetch('https://api.themoviedb.org/3/trending/movie/week?language=en-US', {
+            headers: {
+            accept: 'application/json',
+            Authorization: `Bearer ${import.meta.env.VITE_TMDB_TOKEN}`,
+            },
+        })
+        .then(res => res.json())
+        .then(data => setMovies(data.results))
+        .catch(err => console.error(err));
+    }
+
+    const fetchTvSeries = () => {
+        fetch('https://api.themoviedb.org/3/trending/tv/week?language=en-US', {
+            headers: {
+                accept: 'application/json',
+                Authorization: `Bearer ${import.meta.env.VITE_TMDB_TOKEN}`,
+            },
+            })
+        .then(res => res.json())
+        .then(data => setTvSeries(data.results))
+        .catch(err => console.error(err));
     };
 
     return(
@@ -65,7 +73,7 @@ function Home() {
                 </section>
                 <section className='mt-10 flex items-center flex-col'>
                     <div className='container flex items-center'>
-                        <h1 className='text-bg-gray font-Inter-SM text-base pl-2 md:pl-0 pr-4'>Trending</h1>
+                        <h1 className='text-bg-gray font-Inter-SM text-lg pl-2 md:pl-0 pr-4'>Trending</h1>
                         <button onClick={() => setActiveTab('movie')}
                             className={`px-4 py-1 rounded cursor-pointer font-Inter-SM ${
                                 activeTab === 'movie' ? 'bg-h-pink text-white' : 'bg-transparent text-bg-gray'
@@ -81,20 +89,30 @@ function Home() {
                             TV Series
                         </button>
                     </div>
-                    <div className="w-full text-white flex justify-center mt-4">
-                        <div className="flex container pl-2 pr-2 md:pl-0">
-                            {activeTab === 'movie' ? ( renderMovies() ) : ( renderTVSeries())}
+                    <div className="w-full text-white flex justify-center mt-6">
+                        <div className="flex flex-wrap justify-center lg:justify-start gap-x-4 gap-y-6 container pl-8">
+                            {activeTab === 'movie' ? ( 
+                                movies.map((movie: Media) => (
+                                    <MovieCard key={movie.id} movie={movie} mediaType="movie" />
+                                ))
+                            ) : (
+                                tvSeries.map((tv: Media) => (
+                                    <MovieCard key={tv.id} movie={tv} mediaType="tv" />
+                                ))
+                            )}
                         </div>
                     </div>
                 </section>
-                <section className='mt-10 flex justify-center'>
-                    <div className='container border-1'>
-                        <h1 className='text-bg-gray font-Inter-SM text-base pl-2 md:pl-0 pr-4'>Movie</h1>
+                <section className='mt-10 flex items-center flex-col'>
+                    <div className='container'>
+                        <h1 className='text-bg-gray font-Inter-SM text-lg pl-2 md:pl-0 pr-4 mb-4'>Top Rated</h1>
                     </div>
-                </section>
-                <section className='mt-10 flex justify-center'>
-                    <div className='container border-1'>
-                        <h1 className='text-bg-gray font-Inter-SM text-base pl-2 md:pl-0 pr-4'>TV Series</h1>
+                    <div className="flex flex-wrap text-white justify-center lg:justify-start gap-x-4 gap-y-6 container pl-8">
+                        {
+                            topRated.map((movie: Media) => (
+                                <MovieCard key={movie.id} movie={movie} mediaType="movie" />
+                            ))
+                        }
                     </div>
                 </section>
             </main>
