@@ -97,11 +97,11 @@ function Movie() {
 
   return (
     <div className="p-4 space-y-6 flex items-center flex-col">
-        <div className="container mt-15">
+        <div className="container mt-15 flex justify-center">
             {renderPagination()}
         </div>
         <section className='mt-2 flex items-center flex-col'>
-            <div className="flex flex-wrap text-white justify-center lg:justify-start gap-x-4 gap-y-6 container pl-8">
+            <div className="flex flex-wrap text-white justify-center gap-x-4 gap-y-6 container px-8">
                 {
                     movies.map((movie: Media) => (
                         <MovieCard key={movie.id} movie={movie} mediaType="movie" />
