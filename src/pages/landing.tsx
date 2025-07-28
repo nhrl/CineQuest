@@ -3,9 +3,26 @@ import { MagnifyingGlassIcon } from '@heroicons/react/24/solid'
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import { FilmIcon } from "@heroicons/react/24/outline";
 import { FireIcon } from "@heroicons/react/24/outline";
-
+import { Link } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Landing() {
+  const [searchValue, setSearchValue] = useState("");
+  const navigate = useNavigate();
+
+  const handleSearch = () => {
+    if (searchValue.trim()) {
+      navigate(`/search/${encodeURIComponent(searchValue.trim())}`);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
+  };
+
   return (
     <div className="relative w-full">
       {/* Background image */}
@@ -24,22 +41,30 @@ function Landing() {
               >
               CineQuest
           </h1>
-          <h2 className='text-base md:text-4xl text-text-primary font-Inter-SM font-semibold mb-6'>Because Movies Are Meant To Be Explored.</h2>
+          <h2 className='text-base mt-1 md:text-4xl text-text-primary font-Inter-SM font-semibold mb-6'>Because Movies Are Meant To Be Explored.</h2>
           <div className='w-full flex justify-center items-center mb-6'>
               <input
                 type="text"
-                placeholder=""
-                className="bg-white text-black h-10 w-full rounded-tl-sm rounded-bl-sm"
+                value={searchValue}
+                onChange={(e) => setSearchValue(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="Search movie or series"
+                className="bg-white text-black h-10 w-full rounded-tl-sm rounded-bl-sm outline-none pl-2 font-Inter-SM font-medium"
               />
-              <button className="bg-h-pink text-white flex items-center h-10 p-3 cursor-pointer rounded-tr-sm rounded-br-sm">
+              <button
+                onClick={handleSearch}
+                className="bg-h-pink text-white flex items-center h-10 p-3 cursor-pointer rounded-tr-sm rounded-br-sm"
+              >
                 <MagnifyingGlassIcon className="h-6 w-6 text-black" />
               </button>
           </div>
         </div>
-        <button className="bg-h-pink p-3 rounded-sm cursor-pointer font-Inter-SM text-md flex gap-2">
-          View Full Site
-          <ArrowRightIcon className="h-6 w-6 text-white" />
-        </button>
+        <Link to="/Home">
+          <button className="bg-h-pink p-3 rounded-sm cursor-pointer font-Inter-SM text-md flex gap-2 hover:bg-[#660ffa] transition-all duration-300 ease-in-out">
+            View Full Site
+            <ArrowRightIcon className="h-6 w-6 text-white" />
+          </button>
+        </Link>
       </div>
 
       {/*Why CineQuest*/}

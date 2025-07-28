@@ -13,6 +13,9 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
 import { Link } from "react-router-dom";
+import { MagnifyingGlassIcon } from '@heroicons/react/24/solid'
+import { useLocation } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 const genre = [
   { name: 'Action' },
@@ -42,6 +45,13 @@ function Navbar() {
 
     const [showNavbar, setShowNavbar] = useState(true);
     const [lastScrollY, setLastScrollY] = useState(0);
+    const location = useLocation();
+
+    const showSearchBar = location.pathname === "/movie" || location.pathname === "/series";
+    const [searchValue, setSearchValue] = useState("");
+    const navigate = useNavigate();
+    const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
+
 
     useEffect(() => {
       const handleScroll = () => {
@@ -54,32 +64,47 @@ function Navbar() {
       return () => window.removeEventListener('scroll', handleScroll);
     }, [lastScrollY]);
 
+    const handleSearch = () => {
+      if (searchValue.trim()) {
+        navigate(`/search/${encodeURIComponent(searchValue.trim())}`);
+      }
+    };
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === "Enter") {
+        handleSearch();
+      }
+    };
+
   return (
-    <nav className={`bg-bg-purple flex  justify-center border-b md:pl-14 border-h-pink p-4 fixed w-full z-50 top-0 transition-transform duration-300 ${
+    <nav className={`bg-bg-purple flex justify-center border-b border-h-pink p-4 fixed w-full z-50 top-0 transition-transform duration-300 ${
         showNavbar ? 'translate-y-0' : '-translate-y-full'
       }`}>
-        <div className="container flex pr-10">
+        <div className="container flex items-center px-2">
             <div className="flex-1">
                 <Link to="/"><img src={cine} alt="CineQuest" className="h-10 cursor-pointer"/></Link>
             </div>
-
+            {/* This will open the search for mobile view */}
+              <button onClick={() => setIsMobileSearchOpen(!isMobileSearchOpen)} className='block pr-4 lg:hidden'>
+                <MagnifyingGlassIcon className="h-6 w-6 text-white ml-2 cursor-pointer" />
+              </button>
             {/* Desktop View */}
-            <div className="hidden md:flex flex-2 items-center justify-end">
+            <div className={`hidden md:flex flex-2 items-center ${showSearchBar ? 'justify-center' : 'justify-end'}`}>
                 <NavigationMenu viewport={false}>
                     <NavigationMenuList>
                         <NavigationMenuItem>
                             <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-                                <Link to="/Home">Home</Link>
+                                <Link to="/home">Home</Link>
                             </NavigationMenuLink>
                         </NavigationMenuItem>
                         <NavigationMenuItem>
                             <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-                                <Link to="/Movie">Movie</Link>
+                                <Link to="/movie">Movie</Link>
                             </NavigationMenuLink>
                         </NavigationMenuItem>
                         <NavigationMenuItem>
                             <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-                                <Link to="/Series">TV Series</Link>
+                                <Link to="/series">TV Series</Link>
                             </NavigationMenuLink>
                         </NavigationMenuItem>
                         <NavigationMenuItem>
@@ -103,21 +128,34 @@ function Navbar() {
                     </NavigationMenuList>
                 </NavigationMenu>
             </div>
+            {showSearchBar && (
+              <div className='flex-1 hidden lg:flex items-center mr-4'>
+                <input
+                  type="text"
+                  value={searchValue}
+                  onChange={(e) => setSearchValue(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  placeholder="Search movie or series"
+                  className='w-full border-1 outline-none text-white pl-4 h-9 rounded-[4px]'
+                />
+                <button onClick={handleSearch}>
+                  <MagnifyingGlassIcon className='h-6 w-6 text-white ml-2 cursor-pointer'/>
+                </button>
+              </div>
+            )}
+            <div className="md:hidden flex items-center">
+              <button onClick={toggleMenu} className="text-white cursor-pointer">
+                {menuOpen ? <X size={28} /> : <Menu size={28} />}
+              </button>
+            </div>
         </div>
-
-        <div className="md:hidden flex items-center">
-          <button onClick={toggleMenu} className="text-white cursor-pointer">
-            {menuOpen ? <X size={28} /> : <Menu size={28} />}
-          </button>
-        </div>
-
-    {/* Mobile View */}
+      {/* Mobile View */}
       {menuOpen && (
         <div className="z-20 absolute top-[73px] left-0 w-full bg-bg-purple text-white px-6 py-4 md:hidden">
           <ul className="space-y-4">
-            <li><Link to="/Home" onClick={() => setMenuOpen(false)}>Home</Link></li>
-            <li><Link to="/Movie" onClick={() => setMenuOpen(false)}>Movies</Link></li>
-            <li><Link to="/Series" onClick={() => setMenuOpen(false)}>TV Series</Link></li>
+            <li><Link to="/home" onClick={() => setMenuOpen(false)}>Home</Link></li>
+            <li><Link to="/movie" onClick={() => setMenuOpen(false)}>Movies</Link></li>
+            <li><Link to="/series" onClick={() => setMenuOpen(false)}>TV Series</Link></li>
           </ul>
           <h1 className='mt-4 text-bg-gray mb-2'>Genre</h1>
           <ul className='flex flex-wrap gap-y-4 gap-x-2'>
@@ -129,6 +167,32 @@ function Navbar() {
               </li>
             ))}
           </ul>
+        </div>
+      )}
+
+      {/* Displaying the search bar*/}
+      {isMobileSearchOpen && (
+        <div 
+          className={`fixed top-0 left-0 w-full z-50 bg-bg-purple h-18 flex items-center justify-center lg:hidden transform transition-transform duration-300 ease-in-out ${
+            isMobileSearchOpen ? 'translate-y-0' : '-translate-y-[-100%]'
+          }`}
+        >
+          <div className='container flex justify-center px-5'>
+              <input
+                type="text"
+                value={searchValue}
+                onChange={(e) => setSearchValue(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="Search movie or series"
+                className="flex-1 p-2 rounded text-white border-1"
+              />
+              <button onClick={handleSearch}>
+                <MagnifyingGlassIcon className="h-6 w-6 text-white ml-2 cursor-pointer" />
+              </button>
+              <button onClick={() => setIsMobileSearchOpen(!isMobileSearchOpen)}>
+                <X className="h-6 w-6 text-white ml-2 cursor-pointer"/>
+              </button>
+          </div>  
         </div>
       )}
     </nav>

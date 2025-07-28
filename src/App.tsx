@@ -6,6 +6,7 @@ import Landing from './pages/landing.tsx'
 import Home from './pages/home.tsx'
 import Movie from './pages/movie.tsx'
 import Series from './pages/series.tsx'
+import SearchMovie from './pages/search.tsx'
 
 function App() {
   return (
@@ -16,9 +17,10 @@ function App() {
       <main className='mt-18'>
         <Routes>
           <Route path='/' element={<Landing />} />
-          <Route path='/Home' element={<Home />} />
-          <Route path='/Movie' element={<Movie />} />
-          <Route path='/Series' element={<Series />} />
+          <Route path='/home' element={<Home />} />
+          <Route path='/movie' element={<Movie />} />
+          <Route path='/series' element={<Series />} />
+          <Route path='/search/:query' element={<SearchMovie />} /> {/* ✅ new route */}
         </Routes>
       </main>
       <div>

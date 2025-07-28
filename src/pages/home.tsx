@@ -3,12 +3,15 @@ import { MagnifyingGlassIcon } from '@heroicons/react/24/solid'
 import { useState, useEffect} from 'react'
 import MovieCard from '../components/movieCard';
 import type{ Media } from '../types/movie';
+import { useNavigate } from "react-router-dom";
 
 const Home: React.FC = () => {
     const [activeTab, setActiveTab] = useState<'movie' | 'tv'>('movie');
     const [movies, setMovies] = useState<Media[]>([]);
     const [tvSeries, setTvSeries] = useState<Media[]>([]);
     const [topRated, setTopRated] = useState<Media[]>([]);
+    const [searchValue, setSearchValue] = useState("");
+    const navigate = useNavigate();
 
     useEffect(() => {
        fetchMovies();
@@ -52,6 +55,19 @@ const Home: React.FC = () => {
         .catch(err => console.error(err));
     };
 
+    const handleSearch = () => {
+        if (searchValue.trim()) {
+        navigate(`/search/${encodeURIComponent(searchValue.trim())}`);
+        }
+    };
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === "Enter") {
+        handleSearch();
+        }
+    };
+
+
     return(
         <>
             <main>
@@ -62,10 +78,12 @@ const Home: React.FC = () => {
                         <div className='w-full flex justify-center items-center'>
                             <input
                                 type="text"
-                                placeholder=""
-                                className="bg-white text-black h-10 w-full rounded-tl-sm rounded-bl-sm"
+                                onChange={(e) => setSearchValue(e.target.value)}
+                                onKeyDown={handleKeyDown}
+                                placeholder="Search movie or series"
+                                className="bg-white text-black h-10 w-full rounded-tl-sm rounded-bl-sm outline-none pl-2 font-Inter-SM font-medium"
                             />
-                            <button className="bg-h-pink text-white flex items-center h-10 p-3 cursor-pointer rounded-tr-sm rounded-br-sm">
+                            <button onClick={handleSearch} className="bg-h-pink text-white flex items-center h-10 p-3 cursor-pointer rounded-tr-sm rounded-br-sm">
                                 <MagnifyingGlassIcon className="h-6 w-6 text-black" />
                             </button>
                         </div>
@@ -73,7 +91,7 @@ const Home: React.FC = () => {
                 </section>
                 <section className='mt-10 flex items-center flex-col'>
                     <div className='container flex items-center'>
-                        <h1 className='text-bg-gray font-Inter-SM text-sm pl-2 md:pl-4 pr-4 md:text-lg'>Trending</h1>
+                        <h1 className='text-bg-gray font-Inter-SM text-sm pl-4 pr-4 md:text-lg'>Trending</h1>
                         <button onClick={() => setActiveTab('movie')}
                             className={`px-4 py-1 rounded cursor-pointer text-sm md:text-lg font-Inter-SM ${
                                 activeTab === 'movie' ? 'bg-h-pink text-white' : 'bg-transparent text-bg-gray'
@@ -90,7 +108,7 @@ const Home: React.FC = () => {
                         </button>
                     </div>
                     <div className="w-full text-white flex justify-center mt-6">
-                        <div className="flex flex-wrap justify-center gap-x-4 gap-y-6 container pl-8">
+                        <div className="flex flex-wrap justify-center gap-x-4 gap-y-6 container">
                             {activeTab === 'movie' ? ( 
                                 movies.map((movie: Media) => (
                                     <MovieCard key={movie.id} movie={movie} mediaType="movie" />
@@ -105,9 +123,9 @@ const Home: React.FC = () => {
                 </section>
                 <section className='mt-10 flex items-center flex-col'>
                     <div className='container'>
-                        <h1 className='text-bg-gray font-Inter-SM text-lg pl-2 md:pl-0 pr-4 mb-4'>Top Rated</h1>
+                        <h1 className='text-bg-gray font-Inter-SM text-sm md:text-lg pl-2 md:pl-0 pr-4 mb-4'>Top Rated</h1>
                     </div>
-                    <div className="flex flex-wrap text-white justify-center gap-x-4 gap-y-6 container pl-8">
+                    <div className="flex flex-wrap text-white justify-center gap-x-4 gap-y-6 container">
                         {
                             topRated.map((movie: Media) => (
                                 <MovieCard key={movie.id} movie={movie} mediaType="movie" />
