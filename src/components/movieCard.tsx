@@ -3,6 +3,7 @@ import type { Media } from '../types/movie';
 import { truncateTitle, getYear, isLikelyHD } from '../utils/movieUtils';
 import { Play } from 'lucide-react';
 import noImage from '../assets/no-images.jpg'
+import { useNavigate } from 'react-router-dom';
 
 type MovieCardProps = {
   movie: Media;
@@ -14,7 +15,18 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie, mediaType }) => {
     ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
     : `${noImage}`;
 
+  const navigate = useNavigate();
   const ratingLabel = mediaType === 'tv' ? 'HD' : isLikelyHD(movie) ? 'HD' : 'CAM';
+
+  const displayMedia = (id : number, type : string, title : string) => {
+      
+    if(type === 'movie')
+    {
+      navigate(`/movie-display/${title}-${id}`);
+    } else {
+      navigate(`/tv-display/${title}-${id}`);
+    }
+  }
 
   return (
     <div key={movie.id} className='relative group'>
@@ -25,7 +37,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie, mediaType }) => {
         className="h-50 md:h-70 rounded-sm group-hover:opacity-50 transition-opacity duration-300"
       />
 
-      <div onClick={() => console.log(movie.id)} className="absolute w-full h-[200px] md:h-[280px] top-0 flex items-center cursor-pointer justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
+      <div onClick={() => displayMedia(movie.id, mediaType, movie.title || movie.name || '')} className="absolute w-full h-[200px] md:h-[280px] top-0 flex items-center cursor-pointer justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
         <div className='p-2 rounded-full bg-h-pink'>
           <Play className="w-10 h-10 text-white drop-shadow-lg" />
         </div>
@@ -40,7 +52,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie, mediaType }) => {
       </div>
 
       <div className='pl-1 mt-[1px] md:mt-[2px]'>
-        <h1 className='font-Inter-SM text-[12px] md:text-[16px] cursor-pointer hover:text-h-pink'>
+        <h1 className='font-Inter-SM text-[12px] md:text-[16px] cursor-pointer hover:text-h-pink' onClick={() => displayMedia(movie.id, mediaType, movie.title || movie.name || '')}>
           {truncateTitle(movie.title || movie.name || '', 15)}
         </h1>
       </div>
