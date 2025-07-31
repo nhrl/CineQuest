@@ -203,7 +203,7 @@ function Navbar() {
               </button>
             </div>
             {showSearchBar && (
-              <button onClick={() => setIsMobileSearchOpen(!isMobileSearchOpen)} className='pr-4 md:block lg:hidden'>
+              <button onClick={() => setIsMobileSearchOpen(!isMobileSearchOpen)} className='pr-4 hidden md:block lg:hidden'>
                 <MagnifyingGlassIcon className="h-6 w-6 text-white ml-2 cursor-pointer" />
               </button>
             )}
