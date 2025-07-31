@@ -9,6 +9,7 @@ import Series from './pages/series.tsx'
 import SearchMovie from './pages/search.tsx'
 import MovieDisplay from './pages/show/movie-display.tsx'
 import TvDisplay from './pages/show/tv-display.tsx'
+import Genre from './pages/genre.tsx'
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
           <Route path='/search/:query' element={<SearchMovie />} />
           <Route path='/movie-display/:query' element={<MovieDisplay />} />
           <Route path='/tv-display/:query' element={<TvDisplay />} />
+          <Route path='/genre/:query' element={<Genre />} />
         </Routes>
       </main>
       <div>

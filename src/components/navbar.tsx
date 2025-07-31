@@ -17,27 +17,10 @@ import { MagnifyingGlassIcon } from '@heroicons/react/24/solid'
 import { useLocation } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
 
-const genre = [
-  { name: 'Action' },
-  { name: 'Adventure' },
-  { name: 'Animation' },
-  { name: 'Comedy' },
-  { name: 'Crime' },
-  { name: 'Documentary' },
-  { name: 'Drama' },
-  { name: 'Family' },
-  { name: 'Fantasy' },
-  { name: 'History' },
-  { name: 'Horror' },
-  { name: 'Music' },
-  { name: 'Mystery' },
-  { name: 'Romance' },
-  { name: 'Science Fiction' },
-  { name: 'TV Movie' },
-  { name: 'Thriller' },
-  { name: 'War' },
-  { name: 'Western' }
-]
+interface Genre {
+  id: number;
+  name: string;
+}
 
 function Navbar() {
     const [menuOpen, setMenuOpen] = useState(false);
@@ -47,10 +30,20 @@ function Navbar() {
     const [lastScrollY, setLastScrollY] = useState(0);
     const location = useLocation();
 
-    const showSearchBar = location.pathname === "/movie" || location.pathname === "/series";
+    const showSearchBar = [
+    "/movie",
+    "/series",
+    "/search",
+    "/movie-display",
+    "/tv-display",
+    "/genre",
+    ].some(path => location.pathname.startsWith(path));
+
     const [searchValue, setSearchValue] = useState("");
     const navigate = useNavigate();
     const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
+    const [movieGenres, setMovieGenres] = useState<Genre[]>([]);
+    const [tvGenres, setTvGenres] = useState<Genre[]>([]);
 
 
     useEffect(() => {
@@ -76,6 +69,66 @@ function Navbar() {
       }
     };
 
+    useEffect(() => {
+        const fetchGenres = async () => {
+            try {
+                const [movieRes, tvRes] = await Promise.all([
+                    fetch('https://api.themoviedb.org/3/genre/movie/list?language=en', {
+                        headers: {
+                            accept: 'application/json',
+                            Authorization: `Bearer ${import.meta.env.VITE_TMDB_TOKEN}`,
+                        },
+                    }),
+                    fetch('https://api.themoviedb.org/3/genre/tv/list?language=en', {
+                        headers: {
+                            accept: 'application/json',
+                            Authorization: `Bearer ${import.meta.env.VITE_TMDB_TOKEN}`,
+                        },
+                    })
+                ]);
+
+                const movieData = await movieRes.json();
+                const tvData = await tvRes.json();
+
+                setMovieGenres(movieData.genres);
+                setTvGenres(tvData.genres);
+            } catch (error) {
+                console.error('Error fetching genres:', error);
+            }
+        };
+
+        fetchGenres();
+    }, []);
+
+    const renderGenreLinks = (mediaType: 'movie' | 'tv', genres: Genre[]) => (
+        genres.map((genre) => (
+            <li key={genre.id}>
+                <NavigationMenuLink asChild>
+                    <Link 
+                        to={`/genre/${genre.id}-${mediaType}-${genre.name}`} 
+                        className="border-1 border-bg-gray p-1 hover:bg-h-pink hover:border-white"
+                    >
+                        {genre.name}
+                    </Link>
+                </NavigationMenuLink>
+            </li>
+        ))
+    );
+
+    const renderMobileGenreLinks = (mediaType: 'movie' | 'tv', genres: Genre[]) => (
+      genres.map((genre) => (
+          <li key={genre.id}>
+              <Link 
+                  to={`/genre/${genre.id}-${mediaType}-${genre.name}`} 
+                  className="text-sm border border-bg-gray p-1 rounded hover:bg-h-pink hover:border-white"
+                  onClick={() => setMenuOpen(false)}
+              >
+                  {genre.name}
+              </Link>
+          </li>
+      ))
+    );
+
   return (
     <nav className={`bg-bg-purple flex justify-center border-b border-h-pink p-4 fixed w-full z-50 top-0 transition-transform duration-300 ${
         showNavbar ? 'translate-y-0' : '-translate-y-full'
@@ -85,9 +138,11 @@ function Navbar() {
                 <Link to="/"><img src={cine} alt="CineQuest" className="h-10 cursor-pointer"/></Link>
             </div>
             {/* This will open the search for mobile view */}
-              <button onClick={() => setIsMobileSearchOpen(!isMobileSearchOpen)} className='block pr-4 lg:hidden'>
+            {showSearchBar && (
+              <button onClick={() => setIsMobileSearchOpen(!isMobileSearchOpen)} className='block pr-4 md:hidden'>
                 <MagnifyingGlassIcon className="h-6 w-6 text-white ml-2 cursor-pointer" />
               </button>
+            )}
             {/* Desktop View */}
             <div className={`hidden md:flex flex-2 items-center ${showSearchBar ? 'justify-center' : 'justify-end'}`}>
                 <NavigationMenu viewport={false}>
@@ -112,17 +167,16 @@ function Navbar() {
                                 Genre
                             </NavigationMenuTrigger>
                             <NavigationMenuContent>
-                                <ul className="flex flex-wrap justify-center gap-2">
-                                    {genre.map((g, index) => (
-                                    <li key={index}>
-                                        <NavigationMenuLink asChild>
-                                        <a href="#" className="border-1 border-bg-gray p-1 hover:bg-h-pink hover:border-white">
-                                            {g.name}
-                                        </a>
-                                        </NavigationMenuLink>
-                                    </li>
-                                    ))}
-                                </ul>
+                                <div className="p-4">
+                                    <h3 className="mb-2 font-semibold text-white">Movie Genres</h3>
+                                    <ul className="flex flex-wrap justify-center gap-2">
+                                        {renderGenreLinks('movie', movieGenres)}
+                                    </ul>
+                                    <h3 className="mt-4 mb-2 font-semibold text-white">TV Show Genres</h3>
+                                    <ul className="flex flex-wrap justify-center gap-2">
+                                        {renderGenreLinks('tv', tvGenres)}
+                                    </ul>
+                                </div>
                             </NavigationMenuContent>
                         </NavigationMenuItem>
                     </NavigationMenuList>
@@ -148,25 +202,28 @@ function Navbar() {
                 {menuOpen ? <X size={28} /> : <Menu size={28} />}
               </button>
             </div>
+            {showSearchBar && (
+              <button onClick={() => setIsMobileSearchOpen(!isMobileSearchOpen)} className='pr-4 md:block lg:hidden'>
+                <MagnifyingGlassIcon className="h-6 w-6 text-white ml-2 cursor-pointer" />
+              </button>
+            )}
         </div>
       {/* Mobile View */}
       {menuOpen && (
         <div className="z-20 absolute top-[73px] left-0 w-full bg-bg-purple text-white px-6 py-4 md:hidden">
-          <ul className="space-y-4">
-            <li><Link to="/home" onClick={() => setMenuOpen(false)}>Home</Link></li>
-            <li><Link to="/movie" onClick={() => setMenuOpen(false)}>Movies</Link></li>
-            <li><Link to="/series" onClick={() => setMenuOpen(false)}>TV Series</Link></li>
-          </ul>
-          <h1 className='mt-4 text-bg-gray mb-2'>Genre</h1>
-          <ul className='flex flex-wrap gap-y-4 gap-x-2'>
-            {genre.map((g, index) => (
-              <li key={index}>
-                  <a href="#" className="rounded-md border-1 border-bg-gray p-1 hover:bg-h-pink hover:border-white">
-                      {g.name}
-                  </a>
-              </li>
-            ))}
-          </ul>
+            <ul className="space-y-4">
+                <li><Link to="/home" onClick={() => setMenuOpen(false)}>Home</Link></li>
+                <li><Link to="/movie" onClick={() => setMenuOpen(false)}>Movies</Link></li>
+                <li><Link to="/series" onClick={() => setMenuOpen(false)}>TV Series</Link></li>
+            </ul>
+            <h1 className='mt-4 text-bg-gray mb-2'>Movie Genres</h1>
+            <ul className='flex flex-wrap gap-y-4 gap-x-2'>
+                {renderMobileGenreLinks('movie', movieGenres)}
+            </ul>
+            <h1 className='mt-4 text-bg-gray mb-2'>TV Genres</h1>
+            <ul className='flex flex-wrap gap-y-4 gap-x-2'>
+                {renderMobileGenreLinks('tv', tvGenres)}
+            </ul>
         </div>
       )}
 
