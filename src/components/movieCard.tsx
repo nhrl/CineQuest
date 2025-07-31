@@ -52,7 +52,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie, mediaType }) => {
       </div>
 
       <div className='pl-1 mt-[1px] md:mt-[2px]'>
-        <h1 className='font-Inter-SM text-[12px] md:text-[16px] cursor-pointer hover:text-h-pink' onClick={() => displayMedia(movie.id, mediaType, movie.title || movie.name || '')}>
+        <h1 className='text-white font-Inter-SM text-[12px] md:text-[16px] cursor-pointer hover:text-h-pink' onClick={() => displayMedia(movie.id, mediaType, movie.title || movie.name || '')}>
           {truncateTitle(movie.title || movie.name || '', 15)}
         </h1>
       </div>
