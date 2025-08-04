@@ -2,6 +2,7 @@ import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import MovieCard from '../components/movieCard';
 import type { Media } from '../types/movie';
+import Loading from "../components/loading";
 
 function Genre() {
   const { query } = useParams();
@@ -38,11 +39,15 @@ function Genre() {
     fetchByGenre();
   }, [query]);
 
-  if (loading) return <div className="text-white">Loading...</div>;
 
   return (
     <div className="flex justify-center">
-      <div className="container mt-6 px-2">
+      {loading ? (
+        <div className='container h-screen flex items-center justify-center'>
+          <Loading type="spin" color="#7C3AED" height={50} width={50} />
+        </div>
+      ) : (
+        <div className="container mt-6 px-2">
         <h1 className="text-white text-2xl mb-6 font-Inter-SM">
           {query?.split('-')[2]}
         </h1>
@@ -60,6 +65,7 @@ function Genre() {
           })}
         </div>
       </div>
+      )}
     </div>
   );
 }
