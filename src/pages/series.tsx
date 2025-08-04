@@ -11,12 +11,13 @@ import MovieCard from "../components/movieCard";
 import type{Media} from "../types/movie"
 const TOTAL_PAGES = 1000;
 const PAGE_VISIBLE_LIMIT = 5;
-
+import Loading from "../components/loading";
 
 function Series() {
   const [page, setPage] = useState(1);
   const [series, setSeries] = useState([]);
-
+  const [loading, setLoading] = useState(true);
+  
   const fetchMovies = () => {
     fetch(`https://api.themoviedb.org/3/trending/tv/day?language=en-US&page=${page}`, {
       headers: {
@@ -31,6 +32,7 @@ function Series() {
 
   useEffect(() => {
     fetchMovies();
+    setLoading(false);
   }, [page]);
 
   const handlePageChange = (newPage: number) => {
@@ -101,6 +103,9 @@ function Series() {
             {renderPagination()}
         </div>
         <section className='mt-2 flex items-center flex-col'>
+          {loading ? (
+            <Loading type="spin" color="#7C3AED" height={50} width={50} />
+          ) : (
             <div className="flex flex-wrap text-white justify-center gap-x-4 gap-y-6 container md:gap-x-4">
                 {
                     series.map((tv: Media) => (
@@ -108,6 +113,7 @@ function Series() {
                     ))
                 }
             </div>
+          )}  
         </section>
         <div className="container">
             {renderPagination()}

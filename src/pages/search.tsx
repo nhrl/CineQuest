@@ -2,6 +2,7 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import type { Media } from "../types/movie";
 import MovieCard from "../components/movieCard";
+import Loading from "../components/loading";
 
 type MediaWithType = Media & { media_type: "movie" | "tv" };
 
@@ -62,7 +63,7 @@ function SearchMovie() {
         <h1 className=" pl-6 text-sm md:text-2xl font-bold mb-6">Search Results for: "{query}"</h1>
 
         {loading ? (
-          <p>Loading...</p>
+          <Loading type="spin" color="#7C3AED" height={50} width={50} />
         ) : results.length > 0 ? (
           <div className="flex flex-wrap gap-x-4 gap-y-6 justify-center">
             {results.map((item) => (

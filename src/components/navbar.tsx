@@ -144,7 +144,7 @@ function Navbar() {
               </button>
             )}
             {/* Desktop View */}
-            <div className={`hidden md:flex flex-2 items-center ${showSearchBar ? 'justify-center' : 'justify-end'}`}>
+            <div className={`hidden md:flex flex-2 items-center pl-10 ${showSearchBar ? 'justify-center' : 'justify-end'}`}>
                 <NavigationMenu viewport={false}>
                     <NavigationMenuList>
                         <NavigationMenuItem>
