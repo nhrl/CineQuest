@@ -10,7 +10,8 @@
   <img src="https://img.shields.io/badge/React-18-blue?logo=react" />
   <img src="https://img.shields.io/badge/Vite-5-purple?logo=vite" />
   <img src="https://img.shields.io/badge/PWA-Ready-green?logo=pwa" />
-  <img src="https://img.shields.io/github/license/your-username/cinequet" />
+  <img src="https://img.shields.io/github/license/nhrl/cinequet" />
+  <img src="https://img.shields.io/github/stars/nhrl/cinequet?style=social" />
 </p>
 
 ---
