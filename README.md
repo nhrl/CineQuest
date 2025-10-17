@@ -2,7 +2,7 @@
   <img src="public/icons/icon-192x192.png" alt="Cinequet Logo" width="120" />
 </p>
 
-<h1 align="center">🎬 Cinequet</h1>
+<h1 align="center">🎬 Cinequest</h1>
 
 <p align="center">Discover, organize, and enjoy your favorite movies with a sleek <b>Progressive Web App</b> built using React + Vite.</p>
 
@@ -40,6 +40,6 @@
 Clone the repo and install dependencies:
 
 ```bash
-git clone https://github.com/your-username/cinequet.git
-cd cinequet
+git clone https://github.com/your-username/cinequest.git
+cd cinequest
 npm install
